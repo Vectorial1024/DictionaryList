@@ -32,7 +32,9 @@ namespace DictionaryList
         }
 
         /// <summary>
-        /// Returns the number of active elements in this DictionaryList.
+        /// Gets the number of active elements in this DictionaryList.
+        /// <para/>
+        /// An active element is an element that has not been removed from this DictionaryList, and is therefore accessible by an index.
         /// </summary>
         public int Count => _actualCount;
     }
