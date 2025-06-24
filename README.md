@@ -81,28 +81,28 @@ dictList.Add(4); // index 3
 dictList.Add(5); // index 4
 
 // how many items?
-var _ = dictList.Count; // 5
+_ = dictList.Count; // 5
 
 // read from it
-var _ = dictList.ContainsIndex(3); // true
-var _ = dictList[3]; // 4
+_ = dictList.ContainsIndex(3); // true
+_ = dictList[3]; // 4
 
 // write to it
 dictList[3] = 12;
-var _ = dictList[3]; // 12
+_ = dictList[3]; // 12
 // dictList[99] = 99999; // out of bounds; not allowed!
 // dictList[-4] = 42; // out of bounds; not allowed!
 
 // remove from it
 // note: removed items can be GC-ed if that was the last reference to it
 dictList.Unset(1);
-var _ = dictList.ContainsIndex(1); // false
-var _ = dictList.Count; // 4
+_ = dictList.ContainsIndex(1); // false
+_ = dictList.Count; // 4
 // var _ = dictList[1]; // out of bounds; not allowed!
 
 // "revive" indexes, but we recommend Add() if you do not care about the value of indexes.
 dictList[1] = 11;
-var _ = dictList[1]; // 11;
+_ = dictList[1]; // 11;
 
 // let's delete it again...
 dictList.Unset(1);
@@ -110,8 +110,8 @@ dictList.Unset(1);
 // ...to demonstrate traversal
 foreach (var kv in dictList) 
 {
-    var _ = kv.Key;
-    var _ = kv.Value;
+    _ = kv.Key;
+    _ = kv.Value;
     // yields in order: (0, 1), (2, 3), (3, 12), (4, 5); 4 items!
 }
 
@@ -120,7 +120,7 @@ dictList.CompactAndTrimExcess();
 
 // we are done with the data; clear everything by doing:
 dictList.Clear();
-var _ = dictList.Count; // 0
+_ = dictList.Count; // 0
 ```
 
 ## Benchmarking
