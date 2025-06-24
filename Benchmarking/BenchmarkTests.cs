@@ -140,7 +140,7 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
-    public void RemoveManyFromListThenTrim()
+    public void RemoveManyFromListInPlace()
     {
         // remove everything not divisible by 6
         for (var i = _iterList.Count - 1; i >= 0; i--)
@@ -161,7 +161,7 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
-    public void RemoveManyFromDictThenTrim()
+    public void RemoveManyFromDictInPlace()
     {
         // remove everything not divisible by 6
         foreach (var kv in _iterDict)
@@ -182,7 +182,7 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
-    public void RemoveManyFromDictListThenCompact()
+    public void RemoveManyFromDictListInPlace()
     {
         // remove everything not divisible by 6
         foreach (var kv in _iterDictList)
