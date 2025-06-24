@@ -134,24 +134,21 @@ dotnet run -c=Release --project=Benchmarking
 ```
 
 ### Quick performance comparison between relevant collection types
-| Task                                   | List   | DictionaryList | Dictionary |
-|----------------------------------------|--------|----------------|------------|
-| Append Many Items (speed)              | 👍     | 👌             | 👎👎       |
-| Append Many Items (memory)             | 👍     | 👌             | 👎👎       |
-| Full Iteration (speed)                 | 👍     | 👎             | 👌         |
-| Full Iteration (memory)                | 👍 (0) | 👌             | 👍 (0)     |
-| Read Many Items (speed)                | 👍     | 👌             | 👎         |
-| Read Many Items (memory)               | 👍 (0) | 👍 (0)         | 👍 (0)     |
-| Remove Many Items In-place (speed)     | 👎👎👎 | 👌             | 👍         |
-| Remove Many Items In-place (memory)    | 👍 (0) | 👌             | 👍 (0)     |
-| Remove Many Items w/ LINQ (speed)      | 👍     | 👌             | 👎👎       |
-| Remove Many Items w/ LINQ (memory) (1) | 👍     | 👌             | 👎         |
-| Emit Key/Index During `foreach`        | ❌      | ✔️             | ✔️         |
-
-(1) Memory usage increases as more items are kept.
+| Task                                | List   | DictionaryList | Dictionary |
+|-------------------------------------|--------|----------------|------------|
+| Append Many Items (speed)           | 👍     | 👌             | 👎👎       |
+| Append Many Items (memory)          | 👍     | 👌             | 👎👎       |
+| Full Iteration (speed)              | 👍     | 👎             | 👌         |
+| Full Iteration (memory)             | 👍 (0) | 👌             | 👍 (0)     |
+| Read Many Items (speed)             | 👍     | 👌             | 👎         |
+| Read Many Items (memory)            | 👍 (0) | 👍 (0)         | 👍 (0)     |
+| Remove Many Items In-place (speed)  | 👎👎👎 | 👌             | 👍         |
+| Remove Many Items In-place (memory) | 👍 (0) | 👌             | 👍 (0)     |
+| Remove Many Items w/ LINQ (speed)   | 👍     | 👌             | 👎👎       |
+| Remove Many Items w/ LINQ (memory)  | 👍     | 👌             | 👎         |
+| Emit Key/Index During `foreach`     | ❌      | ✔️             | ✔️         |
 
 You may see that `DictionaryList<T>` is an all-rounded, midway solution between a `List<T>` and a `Dictionary<TKey,TValue>`. 
-`DictionaryList<T>` is able to limit its memory usage while offering reasonable performance.
 
 ### Sample benchmarking results
 See `BENCHMARK.md`.
