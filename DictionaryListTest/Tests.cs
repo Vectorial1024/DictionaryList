@@ -77,4 +77,37 @@ public class Tests
         _dictList.Unset(1);
         Assert.Pass();
     }
+
+    [Test]
+    public void ListTraversal()
+    {
+        // correct traversal order, even when some items are gone
+        _dictList.Add(1);
+        _dictList.Add(2);
+        _dictList.Add(3);
+        _dictList.Add(4);
+        _dictList.Add(5);
+        _dictList.Unset(1);
+
+        var keyQueue = new Queue<int>();
+        var valQueue = new Queue<int>();
+        foreach (var kv in _dictList)
+        {
+            keyQueue.Enqueue(kv.Key);
+            valQueue.Enqueue(kv.Value);
+        }
+
+        // pop from the queue
+        Assert.That(keyQueue.Dequeue(), Is.EqualTo(0));
+        Assert.That(keyQueue.Dequeue(), Is.EqualTo(2));
+        Assert.That(keyQueue.Dequeue(), Is.EqualTo(3));
+        Assert.That(keyQueue.Dequeue(), Is.EqualTo(4));
+        Assert.That(keyQueue.TryPeek(out _), Is.EqualTo(false));
+
+        Assert.That(valQueue.Dequeue(), Is.EqualTo(1));
+        Assert.That(valQueue.Dequeue(), Is.EqualTo(3));
+        Assert.That(valQueue.Dequeue(), Is.EqualTo(4));
+        Assert.That(valQueue.Dequeue(), Is.EqualTo(5));
+        Assert.That(keyQueue.TryPeek(out _), Is.EqualTo(false));
+    }
 }
