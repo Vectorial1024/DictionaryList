@@ -4,3 +4,4 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 DictionaryList.sln.DotSettings.user
+BenchmarkDotNet.Artifacts/
