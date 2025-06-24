@@ -12,7 +12,6 @@ It is obvious `List<T>` is a bad choice. But, also consider the alternatives:
 - `Array<T>` does not automatically resize: tedious memory management
 - It is very expensive to insert many data into `Dictionary<int, T>`
 - `HashSet<T>` rejects duplicated data (perhaps your data may contain duplicates)
-- `Queue<T>` does not allow direct element access
 - Sometimes, using `IEnumerator` to lazily load/find items could be slow
 - Or, perhaps batch processing is required so that `IEnumerator` is not suitable
 
