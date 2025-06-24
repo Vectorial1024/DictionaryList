@@ -110,7 +110,7 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
-    public void AccessList()
+    public void ReadManyFromList()
     {
         // access all indexes of multiples of 5
         for (var i = 0; i < N; i += 5)
@@ -120,7 +120,7 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
-    public void AccessDict()
+    public void ReadManyFromDict()
     {
         // access all indexes of multiples of 5
         for (var i = 0; i < N; i += 5)
@@ -130,7 +130,7 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
-    public void AccessDictList()
+    public void ReadManyFromDictList()
     {
         // access all indexes of multiples of 5
         for (var i = 0; i < N; i += 5)
