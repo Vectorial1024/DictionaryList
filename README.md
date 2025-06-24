@@ -98,7 +98,7 @@ _ = dictList[3]; // 12
 dictList.Unset(1);
 _ = dictList.ContainsIndex(1); // false
 _ = dictList.Count; // 4
-// var _ = dictList[1]; // out of bounds; not allowed!
+// _ = dictList[1]; // out of bounds; not allowed!
 
 // "revive" indexes, but we recommend Add() if you do not care about the value of indexes.
 dictList[1] = 11;
