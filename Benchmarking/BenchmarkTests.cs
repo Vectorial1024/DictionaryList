@@ -154,6 +154,13 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
+    public void RemoveManyFromListWithLinq()
+    {
+        // remove everything not divisible by 6
+        _iterList = _iterList.Where(i => i % 6 == 0).ToList();
+    }
+
+    [Benchmark]
     public void RemoveManyFromDictThenTrim()
     {
         // remove everything not divisible by 6
@@ -168,6 +175,13 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
+    public void RemoveManyFromDictWithLinq()
+    {
+        // remove everything not divisible by 6
+        _iterDict = _iterDict.Where(kv => kv.Key % 6 == 0).ToDictionary();
+    }
+
+    [Benchmark]
     public void RemoveManyFromDictListThenCompact()
     {
         // remove everything not divisible by 6
@@ -179,5 +193,18 @@ public class DictListBenchmarks
             }
             _iterDictList.Unset(kv.Key);
         }
+    }
+
+    [Benchmark]
+    public void RemoveManyFromDictListWithLinq()
+    {
+        // remove everything not divisible by 6
+        var temp = _iterDictList.Where(kv => kv.Key % 6 == 0).ToList();
+        var target = new DictionaryList<int>(temp.Count);
+        foreach (var kv in target)
+        {
+            target.Add(kv.Value);
+        }
+        _iterDictList = target;
     }
 }
