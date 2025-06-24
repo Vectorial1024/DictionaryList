@@ -72,11 +72,22 @@ dotnet build -c=Release
 dotnet run -c=Release --project=Benchmarking
 ```
 
-### Quick comparison between relevant collection types
-(WIP)
+### Quick performance comparison between relevant collection types
+| Task                              | List   | DictionaryList | Dictionary |
+|-----------------------------------|--------|----------------|------------|
+| Add Many Items (speed)            | 👍     | 👌             | 👎👎       |
+| Add Many Items (memory)           | 👍     | 👌             | 👎👎       |
+| Full iteration (speed)            | 👍     | 👎             | 👌         |
+| Full iteration (memory)           | 👍 (0) | 👌             | 👍 (0)     |
+| Read Many Items (speed)           | 👍     | 👌             | 👎         |
+| Read Many Items (memory)          | 👍 (0) | 👍 (0)         | 👍 (0)     |
+| Remove Many Items + Trim (speed)  | 👎👎👎 | 👌             | 👍         |
+| Remove Many Items + Trim (memory) | 👍 (0) | 👌             | 👍 (0)     |
+
+You may see that `DictionaryList<T>` is an all-rounded, midway solution between a `List<T>` and a `Dictionary<TKey,TValue>`. 
 
 ### Sample benchmarking results
-(WIP)
+See `BENCHMARK.md`.
 
 ## Testing
 (WIP)
