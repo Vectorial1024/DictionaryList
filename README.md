@@ -64,7 +64,13 @@ Still, you may consider the following sample code:
 ## Benchmarking
 This package is benchmarked with the BenchmarkDotNet package.
 
-(WIP)
+To run the benchmark:
+
+```shell
+# BenchmarkDotNet strongly recommends benchmarking in Release mode
+dotnet build -c=Release
+dotnet run -c=Release --project=Benchmarking
+```
 
 ### Quick comparison between relevant collection types
 (WIP)
