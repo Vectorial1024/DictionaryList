@@ -127,4 +127,46 @@ public class Tests
         }
         Assert.Pass();
     }
+
+    [Test]
+    public void ListCompacting()
+    {
+        // insert many items, then remove many items, to simulate aftermath of remove-many
+        // then we compact the list to reclaim the unused memory
+        const int itemsTarget = 100;
+        for (var i = 0; i < itemsTarget; i++)
+        {
+            _dictList.Add(i);
+        }
+        Assert.That(_dictList.Capacity, Is.GreaterThanOrEqualTo(itemsTarget));
+        const int trimmedTarget = itemsTarget / 4;
+        // remove everything which is not divisible by 4
+        // also tests that we can iterate through the list as it shrinks; that's pretty much the idea of the DictionaryList!
+        foreach (var kv in _dictList)
+        {
+            if (kv.Key % 4 == 0)
+            {
+                continue;
+            }
+            _dictList.Unset(kv.Key);
+        }
+        // then trim it
+        _dictList.CompactAndTrimExcess();
+        // we should have a list that contains exactly this many items, and also the same capacity
+        Assert.That(_dictList, Has.Count.EqualTo(trimmedTarget));
+        Assert.That(_dictList.Capacity, Is.EqualTo(trimmedTarget));
+        // and also the expected contents
+        var previousValue = int.MinValue;
+        foreach (var kv in _dictList)
+        {
+            var value = kv.Value;
+            Assert.That(value, Is.GreaterThanOrEqualTo(previousValue));
+            if (previousValue != int.MinValue)
+            {
+                // check the interval is correct
+                Assert.That(value - previousValue, Is.EqualTo(4));
+            }
+            previousValue = value;
+        }
+    }
 }

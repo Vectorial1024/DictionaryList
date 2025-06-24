@@ -34,7 +34,6 @@ namespace Vectorial1024.Collections.Generic
         /// </summary>
         public DictionaryList()
         {
-
         }
 
         /// <summary>
@@ -63,6 +62,13 @@ namespace Vectorial1024.Collections.Generic
         /// This only counts the number of elements accessible by an index.
         /// </summary>
         public int Count => _actualCount;
+
+        /// <summary>
+        /// Gets
+        /// <para/>
+        /// Note: re
+        /// </summary>
+        public int Capacity => _list.Capacity;
 
         public TValue this[int index]
         {
@@ -95,9 +101,10 @@ namespace Vectorial1024.Collections.Generic
         /// <summary>
         /// Unsets and removes the element at the specified index of the DictionaryList.
         /// <para/>
-        /// This leaves behind unused memory, which may be reclaimed by calling Compact() later.
+        /// This leaves behind unused memory, which may be reclaimed by compacting the DictionaryList.
         /// </summary>
         /// <param name="index">The index at which to remove an item.</param>
+        /// <seealso cref="CompactAndTrimExcess"/>
         public void Unset(int index)
         {
             var box = _list[index];
@@ -156,6 +163,7 @@ namespace Vectorial1024.Collections.Generic
                 }
                 newList.Add(item);
             }
+            _list = newList;
             _actualCount = newList.Count;
         }
 
