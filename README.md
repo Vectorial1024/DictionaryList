@@ -136,8 +136,8 @@ dotnet run -c=Release --project=Benchmarking
 ### Quick performance comparison between relevant collection types
 | Task                              | List   | DictionaryList | Dictionary |
 |-----------------------------------|--------|----------------|------------|
-| Add Many Items (speed)            | 👍     | 👌             | 👎👎       |
-| Add Many Items (memory)           | 👍     | 👌             | 👎👎       |
+| Append Many Items (speed)         | 👍     | 👌             | 👎👎       |
+| Append Many Items (memory)        | 👍     | 👌             | 👎👎       |
 | Full iteration (speed)            | 👍     | 👎             | 👌         |
 | Full iteration (memory)           | 👍 (0) | 👌             | 👍 (0)     |
 | Read Many Items (speed)           | 👍     | 👌             | 👎         |

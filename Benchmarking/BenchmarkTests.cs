@@ -50,7 +50,7 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
-    public void AddManyToList()
+    public void AppendManyToList()
     {
         var list = new List<int>();
         for (var i = 0; i < N; i++)
@@ -60,7 +60,7 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
-    public void AddManyToDict()
+    public void AppendManyToDict()
     {
         var dict = new Dictionary<int, int>();
         for (var i = 0; i < N; i++)
@@ -70,7 +70,7 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
-    public void AddManyToDictList()
+    public void AppendManyToDictList()
     {
         var dictList = new DictionaryList<int>();
         for (var i = 0; i < N; i++)
