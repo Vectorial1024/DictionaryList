@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace DictionaryList
 {
@@ -9,6 +11,10 @@ namespace DictionaryList
     /// </summary>
     public class DictionaryList<TValue>
     {
+        /// <summary>
+        /// The data-box for storing DictionaryList elements. This is to distinguish between a genuine null and a "no data" entry.
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
         internal struct DataBox<TData>
         {
             internal TData Value;
@@ -19,7 +25,7 @@ namespace DictionaryList
             }
         }
 
-        internal List<DataBox<TValue>> _list = new List<DataBox<TValue>>();
+        internal List<DataBox<TValue>?> _list = new List<DataBox<TValue>?>();
 
         internal int _actualCount;
 
@@ -32,10 +38,138 @@ namespace DictionaryList
         }
 
         /// <summary>
-        /// Gets the number of active elements in this DictionaryList.
+        /// Gets the number of elements contained in this DictionaryList.
         /// <para/>
-        /// An active element is an element that has not been removed from this DictionaryList, and is therefore accessible by an index.
+        /// This only counts the number of elements accessible by an index.
         /// </summary>
         public int Count => _actualCount;
+
+        public TValue this[int index]
+        {
+            get
+            {
+                var item = _list[index];
+                if (item == null)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                }
+                return item.Value.Value;
+            }
+            set
+            {
+                _list[index] = new DataBox<TValue>(value);
+            }
+        }
+
+        /// <summary>
+        /// Adds an object to the end of the DictionaryList.
+        /// </summary>
+        /// <param name="value">The object to be added.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Add(TValue value)
+        {
+            _list.Add(new DataBox<TValue>(value));
+            _actualCount++;
+        }
+
+        /// <summary>
+        /// Unsets and removes the element at the specified index of the DictionaryList.
+        /// <para/>
+        /// This leaves behind unused memory, which may be reclaimed by calling Compact() later.
+        /// </summary>
+        /// <param name="index">The index at which to remove an item.</param>
+        public void Unset(int index)
+        {
+            var box = _list[index];
+            if (box == null)
+            {
+                return;
+            }
+
+            _list[index] = null;
+            _actualCount--;
+        }
+
+        /// <summary>
+        /// Determines whether the DictionaryList contains the specified index.
+        /// </summary>
+        /// <param name="index">The index to check existence for.</param>
+        /// <returns>Returns true if the index is in use by an element; false otherwise (e.g. unused memory left behind by RemoveAt())</returns>
+        public bool ContainsIndex(int index)
+        {
+            if (index < 0)
+            {
+                return false;
+            }
+
+            if (index > _list.Count)
+            {
+                return false;
+            }
+            // we might have it
+            return _list[index].HasValue;
+        }
+
+        #region Enumeration
+
+        internal struct DictionaryListEnumerator : IEnumerator<KeyValuePair<int, TValue>>, IDictionaryEnumerator
+        {
+            private DictionaryList<TValue> _dictList;
+            private int _index;
+            private KeyValuePair<int, TValue> _current;
+
+            internal DictionaryListEnumerator(DictionaryList<TValue> dictList)
+            {
+                _index = 0;
+                _dictList = dictList;
+                _current = default;
+            }
+
+            public bool MoveNext()
+            {
+                while (true)
+                {
+                    if (_index >= _dictList._list.Count)
+                    {
+                        // end of list
+                        break;
+                    }
+                    if (!_dictList.ContainsIndex(_index))
+                    {
+                        // not set; find the next one!
+                        _index++;
+                        continue;
+                    }
+                    _current = new KeyValuePair<int, TValue>(_index, _dictList[_index]);
+                    _index++;
+                    return true;
+                }
+                // end of list
+                _current = default;
+                return false;
+            }
+
+            public void Reset()
+            {
+                _index = 0;
+                _current = default;
+            }
+
+            KeyValuePair<int, TValue> IEnumerator<KeyValuePair<int, TValue>>.Current => _current;
+
+            object? IEnumerator.Current => _current;
+
+            public void Dispose()
+            {
+            }
+
+            public DictionaryEntry Entry => new DictionaryEntry(_current.Key, _current.Value);
+            public object Key => _current.Key;
+            public object? Value => _current.Value;
+        }
+
+        // -------
+
+        #endregion
     }
 }
