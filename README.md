@@ -5,8 +5,9 @@ When PHP arrays meet C#: high-performance reinterpretation of Lists.
 
 ## Situation
 Consider a situation where a `List<T>` needs to receive and remove many items. We quickly run into problems:
-- Removing items from `List<T>` is generally painfully expensive!
+- Removing many items from `List<T>` is generally painfully expensive!
 - Removing items from `List<T>` changes all existing index values (in case they are important)
+- Removing items from `List<T>` inside a `foreach` block is not allowed!
 
 It is obvious `List<T>` is a bad choice. But, also consider the alternatives:
 - `Array<T>` does not automatically resize: tedious memory management
