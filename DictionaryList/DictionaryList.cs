@@ -9,7 +9,7 @@ namespace Vectorial1024.Collections.Generic
     /// Represents a strongly-typed list of objects that has a dictionary-like structure.
     /// Elements can be accessed by an index which is ordered but not guaranteed to be continuous.
     /// </summary>
-    public class DictionaryList<TValue>
+    public class DictionaryList<TValue> : IEnumerable<KeyValuePair<int,TValue>>
     {
         /// <summary>
         /// The data-box for storing DictionaryList elements. This is to distinguish between a genuine null and a "no data" entry.
@@ -210,7 +210,12 @@ namespace Vectorial1024.Collections.Generic
             public object? Value => _current.Value;
         }
 
-        // -------
+        public IEnumerator<KeyValuePair<int,TValue>> GetEnumerator() => new DictionaryListEnumerator(this);
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         #endregion
     }
