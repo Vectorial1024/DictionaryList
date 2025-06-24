@@ -110,6 +110,36 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
+    public void AccessList()
+    {
+        // access all indexes of multiples of 5
+        for (var i = 0; i < N; i += 5)
+        {
+            _ = _iterList[i];
+        }
+    }
+
+    [Benchmark]
+    public void AccessDict()
+    {
+        // access all indexes of multiples of 5
+        for (var i = 0; i < N; i += 5)
+        {
+            _ = _iterDict[i];
+        }
+    }
+
+    [Benchmark]
+    public void AccessDictList()
+    {
+        // access all indexes of multiples of 5
+        for (var i = 0; i < N; i += 5)
+        {
+            _ = _iterDictList[i];
+        }
+    }
+
+    [Benchmark]
     public void RemoveManyFromListThenTrim()
     {
         // remove everything not divisible by 6
