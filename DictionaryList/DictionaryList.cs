@@ -38,6 +38,17 @@ namespace Vectorial1024.Collections.Generic
         }
 
         /// <summary>
+        /// Initializes a new instance of the `DictionaryList&lt;TValue&gt;` class that contains elements copied from the
+        /// specified collection with enough capacity to hold all such elements.
+        /// </summary>
+        /// <param name="collection">The collection to take copies from.</param>
+        public DictionaryList(DictionaryList<TValue> collection)
+        {
+            _list = new List<DataBox<TValue>?>(collection._list);
+            _actualCount = collection._actualCount;
+        }
+
+        /// <summary>
         /// Gets the number of elements contained in this DictionaryList.
         /// <para/>
         /// This only counts the number of elements accessible by an index.
@@ -109,6 +120,37 @@ namespace Vectorial1024.Collections.Generic
             // we might have it
             return _list[index].HasValue;
         }
+
+        #region CompactAndTrim
+
+        /// <summary>
+        /// Removes all elements from the DictionaryList.
+        /// </summary>
+        public void Clear()
+        {
+            _list.Clear();
+        }
+
+        /// <summary>
+        /// Re-indexes all elements of the DictionaryList sequentially from 0,
+        /// and sets the capacity to the actual number of elements in the DictionaryList,
+        /// if that number is less than a threshold value.
+        /// </summary>
+        public void CompactAndTrimExcess()
+        {
+            var newList = new List<DataBox<TValue>?>(_actualCount);
+            foreach (var item in _list)
+            {
+                if (item == null)
+                {
+                    continue;
+                }
+                newList.Add(item);
+            }
+            _actualCount = newList.Count;
+        }
+
+        #endregion
 
         #region Enumeration
 
