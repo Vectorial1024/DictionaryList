@@ -8,6 +8,6 @@ internal static class Program
     {
         Console.WriteLine("Benchmarking the DictionaryList.");
 
-        // var summary = BenchmarkRunner.Run<BenchmarkTest>();
+        var summary = BenchmarkRunner.Run<DictListBenchmarks>();
     }
 }

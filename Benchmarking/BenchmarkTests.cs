@@ -1,0 +1,153 @@
+using BenchmarkDotNet.Attributes;
+using Vectorial1024.Collections.Generic;
+
+namespace DictionaryListBenchmarking;
+
+[MemoryDiagnoser(false)]
+public class DictListBenchmarks
+{
+    [Params(10, 100, 1000, 10000, 100000)]
+    public int N;
+
+    private List<int> _masterList = [];
+
+    private Dictionary<int, int> _masterDict = new();
+
+    private DictionaryList<int> _masterDictList = new();
+
+    private List<int> _iterList = [];
+
+    private Dictionary<int, int> _iterDict = new();
+
+    private DictionaryList<int> _iterDictList = new();
+
+    [GlobalSetup]
+    public void PopulateStuff()
+    {
+        // populate with numbers from 0 to N-1
+
+        _masterList.Clear();
+        _masterList.TrimExcess();
+        _masterDict.Clear();
+        _masterDict.TrimExcess();
+        _masterDictList.Clear();
+        _masterDictList.CompactAndTrimExcess();
+
+        for (var i = 0; i < N; i++)
+        {
+            _masterList.Add(i);
+            _masterDict.Add(i, i);
+            _masterDictList.Add(i);
+        }
+    }
+
+    [IterationSetup]
+    public void CloneStuff()
+    {
+        _iterList = new List<int>(_masterList);
+        _iterDict = new Dictionary<int, int>(_masterDict);
+        _iterDictList = new DictionaryList<int>(_masterDictList);
+    }
+
+    [Benchmark]
+    public void AddManyToList()
+    {
+        var list = new List<int>();
+        for (var i = 0; i < N; i++)
+        {
+            list.Add(i);
+        }
+    }
+
+    [Benchmark]
+    public void AddManyToDict()
+    {
+        var dict = new Dictionary<int, int>();
+        for (var i = 0; i < N; i++)
+        {
+            dict[i] = i;
+        }
+    }
+
+    [Benchmark]
+    public void AddManyToDictList()
+    {
+        var dictList = new DictionaryList<int>();
+        for (var i = 0; i < N; i++)
+        {
+            dictList.Add(i);
+        }
+    }
+
+    [Benchmark]
+    public void IterateList()
+    {
+        var sum = 0L;
+        foreach (var num in _masterList)
+        {
+            sum += num;
+        }
+    }
+
+    [Benchmark]
+    public void IterateDict()
+    {
+        var sum = 0L;
+        foreach (var kv in _masterDict)
+        {
+            sum += kv.Value;
+        }
+    }
+
+    [Benchmark]
+    public void IterateDictList()
+    {
+        var sum = 0L;
+        foreach (var kv in _masterDictList)
+        {
+            sum += kv.Value;
+        }
+    }
+
+    [Benchmark]
+    public void RemoveManyFromListThenTrim()
+    {
+        // remove everything not divisible by 6
+        for (var i = _iterList.Count - 1; i >= 0; i--)
+        {
+            if (i % 6 == 0)
+            {
+                continue;
+            }
+            _iterList.RemoveAt(i);
+        }
+    }
+
+    [Benchmark]
+    public void RemoveManyFromDictThenTrim()
+    {
+        // remove everything not divisible by 6
+        foreach (var kv in _iterDict)
+        {
+            if (kv.Key % 6 == 0)
+            {
+                continue;
+            }
+            _iterDict.Remove(kv.Key);
+        }
+    }
+
+    [Benchmark]
+    public void RemoveManyFromDictListThenCompact()
+    {
+        // remove everything not divisible by 6
+        foreach (var kv in _iterDictList)
+        {
+            if (kv.Key % 6 == 0)
+            {
+                continue;
+            }
+            _iterDictList.Unset(kv.Key);
+        }
+    }
+}
