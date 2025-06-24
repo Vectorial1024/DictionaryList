@@ -35,7 +35,6 @@ Please see `CHANGELOG.md`.
 
 ### Todos
 Some todos of this package:
-- Test cases
 - Implement the various list interfaces
 - Performance optimization
 
