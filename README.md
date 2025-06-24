@@ -68,7 +68,6 @@ To run the benchmark:
 
 ```shell
 # BenchmarkDotNet strongly recommends benchmarking in Release mode
-dotnet build -c=Release
 dotnet run -c=Release --project=Benchmarking
 ```
 
