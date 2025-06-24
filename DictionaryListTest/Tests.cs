@@ -47,4 +47,34 @@ public class Tests
             Assert.That(_dictList.ContainsIndex(i), Is.False);
         }
     }
+
+    [Test]
+    public void IndexAccess()
+    {
+        // tests that out-of-bounds access throws exceptions
+        _dictList = new DictionaryList<int>(5);
+        Assert.Multiple(() =>
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = _dictList[0]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = _dictList[-4]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => _ = _dictList[99]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => _dictList[1] = 4);
+            Assert.Throws<ArgumentOutOfRangeException>(() => _dictList[-7] = 5);
+            Assert.Throws<ArgumentOutOfRangeException>(() => _dictList[99] = 6);
+            Assert.Throws<ArgumentOutOfRangeException>(() => _dictList[0] = 9);
+        });
+    }
+
+    [Test]
+    public void MultipleUnset()
+    {
+        // tests that in-bounds removal is OK
+        _dictList.Add(1);
+        _dictList.Add(2);
+        _dictList.Add(3);
+        _dictList.Unset(1);
+        _dictList.Unset(1);
+        _dictList.Unset(1);
+        Assert.Pass();
+    }
 }

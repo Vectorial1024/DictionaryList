@@ -49,6 +49,15 @@ namespace Vectorial1024.Collections.Generic
         }
 
         /// <summary>
+        /// Initializes a new instance of the `DictionaryList&lt;TValue&gt;` class that is empty and has the specified initial capacity.
+        /// </summary>
+        /// <param name="capacity"></param>
+        public DictionaryList(int capacity)
+        {
+            _list = new List<DataBox<TValue>?>(capacity);
+        }
+
+        /// <summary>
         /// Gets the number of elements contained in this DictionaryList.
         /// <para/>
         /// This only counts the number of elements accessible by an index.
