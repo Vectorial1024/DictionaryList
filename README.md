@@ -5,16 +5,16 @@ When PHP arrays meet C#: high-performance reinterpretation of Lists.
 
 ## Situation
 Consider a situation where a `List<T>` needs to receive and remove many items. We quickly run into problems:
-- Removing many items from `List<T>` is generally painfully expensive!
+- Removing many items from `List<T>` is generally painfully slow!
 - Removing items from `List<T>` changes all existing index values (in case they are important)
 - Removing items from `List<T>` inside a `foreach` block is not allowed!
 
-It is obvious `List<T>` is a bad choice. But, also consider the alternatives:
+Here, it is obvious `List<T>` is a bad choice. But, also consider the alternatives:
 - `Array<T>` does not automatically resize: tedious memory management
-- It is very expensive to insert many data into `Dictionary<int, T>`
-- `HashSet<T>` rejects duplicated data (perhaps your data may contain duplicates)
-- Sometimes, using `IEnumerator` to lazily load/find items could be slow
-- Or, perhaps batch processing is required so that `IEnumerator` is not suitable
+- It is very slow to insert many data into `Dictionary<int,T>`
+- `HashSet<T>` rejects duplicated data (perhaps your data may contain duplicates), and is basically a fancy `Dictionary<T,void>`
+- LINQ expressions are usually the fastest, but will require extra memory allocation when building the solution `List<T>`
+- Or, perhaps the problem asks for a `foreach` solution with side effects, such that LINQ is not suitable
 
 This is a bad situation between a rock and a hard place.
 
