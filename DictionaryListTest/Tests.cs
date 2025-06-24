@@ -102,12 +102,29 @@ public class Tests
         Assert.That(keyQueue.Dequeue(), Is.EqualTo(2));
         Assert.That(keyQueue.Dequeue(), Is.EqualTo(3));
         Assert.That(keyQueue.Dequeue(), Is.EqualTo(4));
-        Assert.That(keyQueue.TryPeek(out _), Is.EqualTo(false));
+        Assert.That(keyQueue.TryPeek(out _), Is.False);
 
         Assert.That(valQueue.Dequeue(), Is.EqualTo(1));
         Assert.That(valQueue.Dequeue(), Is.EqualTo(3));
         Assert.That(valQueue.Dequeue(), Is.EqualTo(4));
         Assert.That(valQueue.Dequeue(), Is.EqualTo(5));
-        Assert.That(keyQueue.TryPeek(out _), Is.EqualTo(false));
+        Assert.That(keyQueue.TryPeek(out _), Is.False);
+    }
+
+    [Test]
+    public void ListClearing()
+    {
+        _dictList.Add(1);
+        _dictList.Add(2);
+        _dictList.Add(3);
+        _dictList.Add(4);
+        _dictList.Add(5);
+
+        _dictList.Clear();
+        foreach (var _ in _dictList)
+        {
+            Assert.Fail("An empty DictionaryList should not be iterable.");
+        }
+        Assert.Pass();
     }
 }
