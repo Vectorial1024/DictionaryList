@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace DictionaryList
+namespace Vectorial1024.Collections.Generic
 {
     /// <summary>
     /// Represents a strongly-typed list of objects that has a dictionary-like structure.
