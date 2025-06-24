@@ -90,4 +90,10 @@ You may see that `DictionaryList<T>` is an all-rounded, midway solution between 
 See `BENCHMARK.md`.
 
 ## Testing
-(WIP)
+This package uses NUnit for testing.
+
+Run the tests with:
+
+```shell
+dotnet test
+```
