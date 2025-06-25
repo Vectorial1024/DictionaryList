@@ -4,6 +4,19 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <Nullable>enable</Nullable>
         <RootNamespace>Vectorial1024.Collections.Generic</RootNamespace>
+
+        <!-- NuGet -->
+        <PackageId>Vectorial1024.DictionaryList</PackageId>
+        <Authors>Vectorial1024</Authors>
+        <Company>Vectorial1024</Company>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AssemblyVersion>0.1.0</AssemblyVersion>
+        <FileVersion>0.1.0</FileVersion>
+        <Title>DictionaryList</Title>
+        <Description>When PHP arrays meet C#: an all-rounded reinterpretation of Lists. Please see the GitHub repository for more information.</Description>
+        <PackageTags>array;list;dictionary</PackageTags>
+        <RepositoryUrl>https://github.com/Vectorial1024/DictionaryList</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
 </Project>
