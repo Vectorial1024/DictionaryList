@@ -1,10 +1,14 @@
 # DictionaryList
 (Badges, etc)
 
-When PHP arrays meet C#: high-performance reinterpretation of Lists.
+When PHP arrays meet C#: an all-rounded reinterpretation of Lists.
 
 ## Situation
-Consider a situation where a `List<T>` needs to receive and remove many items. We quickly run into problems:
+Consider a task that uses a `List<T>`:
+- Receive many items
+- Remove many elements in place, possibly to conserve memory
+
+However, we quickly run into problems:
 - Removing many items from `List<T>` is generally painfully slow!
 - Removing items from `List<T>` changes all existing index values (in case they are important)
 - Removing items from `List<T>` inside a `foreach` block is not allowed!
