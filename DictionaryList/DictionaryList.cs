@@ -183,7 +183,7 @@ namespace Vectorial1024.Collections.Generic
                 _index = 0;
                 _dictList = dictList;
                 _current = default;
-                _logicalCount = _dictList.Count;
+                _logicalCount = _dictList._list.Count;
             }
 
             public bool MoveNext()
