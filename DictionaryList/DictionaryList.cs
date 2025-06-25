@@ -173,34 +173,33 @@ namespace Vectorial1024.Collections.Generic
 
         internal struct DictionaryListEnumerator : IEnumerator<KeyValuePair<int, TValue>>, IDictionaryEnumerator
         {
-            private DictionaryList<TValue> _dictList;
+            private readonly DictionaryList<TValue> _dictList;
             private int _index;
             private KeyValuePair<int, TValue> _current;
+            private readonly int _logicalCount;
 
             internal DictionaryListEnumerator(DictionaryList<TValue> dictList)
             {
                 _index = 0;
                 _dictList = dictList;
                 _current = default;
+                _logicalCount = _dictList.Count;
             }
 
             public bool MoveNext()
             {
-                while (true)
+                var iterIndex = _index;
+                var theDictList = _dictList;
+                while ((uint)iterIndex < (uint)_logicalCount)
                 {
-                    if (_index >= _dictList._list.Count)
-                    {
-                        // end of list
-                        break;
-                    }
-                    if (!_dictList.ContainsIndex(_index))
+                    if (!theDictList.ContainsIndex(iterIndex))
                     {
                         // not set; find the next one!
-                        _index++;
+                        iterIndex++;
                         continue;
                     }
-                    _current = new KeyValuePair<int, TValue>(_index, _dictList[_index]);
-                    _index++;
+                    _current = new KeyValuePair<int, TValue>(iterIndex, theDictList[iterIndex]);
+                    _index = iterIndex + 1;
                     return true;
                 }
                 // end of list
