@@ -123,6 +123,9 @@ dictList.Clear();
 _ = dictList.Count; // 0
 ```
 
+### Thread Safety
+`DictionaryList<T>` is NOT thread safe!
+
 ## Benchmarking
 This package is benchmarked with the BenchmarkDotNet package.
 
