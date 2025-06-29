@@ -1,5 +1,9 @@
 # DictionaryList
-(Badges, etc)
+[![GitHub License][github-license-image]][github-repo-url]
+[![NuGet Version][nuget-version-image]][nuget-url]
+[![NuGet Downloads][nuget-downloads-image]][nuget-stats-url]
+[![GitHub Actions Workflow Status][cs-build-status-image]][github-actions-url]
+[![GitHub Repo Stars][github-stars-image]][github-repo-url]
 
 When PHP arrays meet C#: an all-rounded reinterpretation of Lists.
 
@@ -168,3 +172,14 @@ Run the tests with:
 ```shell
 dotnet test
 ```
+
+[nuget-url]: https://www.nuget.org/packages/Vectorial1024.DictionaryList/
+[nuget-stats-url]: https://www.nuget.org/stats/packages/Vectorial1024.DictionaryList?groupby=Version
+[github-repo-url]: https://github.com/Vectorial1024/DictionaryList
+[github-actions-url]: https://github.com/Vectorial1024/DictionaryList/actions/workflows/dotnet.yml
+
+[github-license-image]: https://img.shields.io/github/license/Vectorial1024/DictionaryList?style=plastic
+[nuget-version-image]: https://img.shields.io/nuget/v/Vectorial1024.DictionaryList?style=plastic
+[nuget-downloads-image]: https://img.shields.io/nuget/dt/Vectorial1024.DictionaryList?style=plastic
+[cs-build-status-image]: https://img.shields.io/github/actions/workflow/status/Vectorial1024/DictionaryList/dotnet.yml?style=plastic
+[github-stars-image]: https://img.shields.io/github/stars/vectorial1024/DictionaryList
