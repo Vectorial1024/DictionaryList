@@ -169,4 +169,39 @@ public class Tests
             previousValue = value;
         }
     }
+
+    [Test]
+    public void ListClearingManual()
+    {
+        // it is possible to remove keys during iteration, since we can only unset things
+        _dictList.Add(1);
+        _dictList.Add(2);
+        _dictList.Add(3);
+        _dictList.Add(4);
+        _dictList.Add(5);
+
+        foreach (var kv in _dictList)
+        {
+            _dictList.UnsetAt(kv.Key);
+        }
+
+        Assert.Pass();
+    }
+
+    [Test]
+    public void ListCannotAddItemsDuringForeach()
+    {
+        _dictList.Add(1);
+        _dictList.Add(2);
+        _dictList.Add(3);
+
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            foreach (var _ in _dictList)
+            {
+                // it should somehow throw the exception during iteration
+                _dictList.Add(9);
+            }
+        });
+    }
 }

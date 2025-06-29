@@ -29,6 +29,9 @@ namespace Vectorial1024.Collections.Generic
 
         internal int _actualCount;
 
+        // the version of the DictionaryList, to ensure the enumerator can work correctly
+        private int _version;
+
         /// <summary>
         /// Initializes a new instance of the `DictionaryList&lt;TValue&gt;` class that is empty and has the default capacity.
         /// </summary>
@@ -96,6 +99,7 @@ namespace Vectorial1024.Collections.Generic
         {
             _list.Add(new DataBox<TValue>(value));
             _actualCount++;
+            _version++;
         }
 
         /// <summary>
@@ -165,6 +169,7 @@ namespace Vectorial1024.Collections.Generic
             }
             _list = newList;
             _actualCount = newList.Count;
+            _version++;
         }
 
         #endregion
@@ -177,6 +182,7 @@ namespace Vectorial1024.Collections.Generic
             private int _index;
             private KeyValuePair<int, TValue> _current;
             private readonly int _logicalCount;
+            private readonly int _version;
 
             internal DictionaryListEnumerator(DictionaryList<TValue> dictList)
             {
@@ -184,13 +190,14 @@ namespace Vectorial1024.Collections.Generic
                 _dictList = dictList;
                 _current = default;
                 _logicalCount = _dictList._list.Count;
+                _version = dictList._version;
             }
 
             public bool MoveNext()
             {
                 var iterIndex = _index;
                 var theDictList = _dictList;
-                while ((uint)iterIndex < (uint)_logicalCount)
+                while (_version == theDictList._version && (uint)iterIndex < (uint)_logicalCount)
                 {
                     if (!theDictList.ContainsIndex(iterIndex))
                     {
@@ -202,6 +209,12 @@ namespace Vectorial1024.Collections.Generic
                     _index = iterIndex + 1;
                     return true;
                 }
+
+                if (_version != _dictList._version)
+                {
+                    // DictionaryList was modified during enumeration; not allowed!
+                    throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
+                }
                 // end of list
                 _current = default;
                 return false;
@@ -209,6 +222,11 @@ namespace Vectorial1024.Collections.Generic
 
             public void Reset()
             {
+                if (_version != _dictList._version)
+                {
+                    // DictionaryList was modified during enumeration; not allowed!
+                    throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
+                }
                 _index = 0;
                 _current = default;
             }
