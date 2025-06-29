@@ -4,7 +4,7 @@
 [![NuGet Downloads][nuget-downloads-image]][nuget-stats-url]
 [![GitHub Actions Workflow Status][cs-build-status-image]][github-actions-url]
 [![GitHub Repo Stars][github-stars-image]][github-repo-url]
-[![GitHub Sponsors][github-sponsors-image]][github-sponsor-url]
+[![GitHub Sponsors][github-sponsors-image]][github-sponsors-url]
 
 When PHP arrays meet C#: an all-rounded reinterpretation of Lists.
 
