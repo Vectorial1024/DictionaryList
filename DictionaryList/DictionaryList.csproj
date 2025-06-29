@@ -10,6 +10,7 @@
         <Authors>Vectorial1024</Authors>
         <Company>Vectorial1024</Company>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>0.1.0</Version>
         <AssemblyVersion>0.1.0</AssemblyVersion>
         <FileVersion>0.1.0</FileVersion>
         <Title>DictionaryList</Title>
