@@ -31,7 +31,9 @@ rest assured that `DictionaryList<T>` really works well.
 ## Install
 via NuGet:
 
-(WIP)
+```shell
+dotnet add package Vectorial1024.DictionaryList
+```
 
 ### Change log
 Please see `CHANGELOG.md`.
