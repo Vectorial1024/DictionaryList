@@ -105,7 +105,7 @@ namespace Vectorial1024.Collections.Generic
         /// </summary>
         /// <param name="index">The index at which to remove an item.</param>
         /// <seealso cref="CompactAndTrimExcess"/>
-        public void Unset(int index)
+        public void UnsetAt(int index)
         {
             var box = _list[index];
             if (box == null)

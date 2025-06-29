@@ -36,7 +36,7 @@ public class Tests
         // remove things, to decrease the count
         for (var i = 0; i < itemsTarget; i++)
         {
-            _dictList.Unset(i);
+            _dictList.UnsetAt(i);
             Assert.Multiple(() =>
             {
                 Assert.That(_dictList, Has.Count.EqualTo(itemsTarget - i - 1));
@@ -72,9 +72,9 @@ public class Tests
         _dictList.Add(1);
         _dictList.Add(2);
         _dictList.Add(3);
-        _dictList.Unset(1);
-        _dictList.Unset(1);
-        _dictList.Unset(1);
+        _dictList.UnsetAt(1);
+        _dictList.UnsetAt(1);
+        _dictList.UnsetAt(1);
         Assert.Pass();
     }
 
@@ -87,7 +87,7 @@ public class Tests
         _dictList.Add(3);
         _dictList.Add(4);
         _dictList.Add(5);
-        _dictList.Unset(1);
+        _dictList.UnsetAt(1);
 
         var keyQueue = new Queue<int>();
         var valQueue = new Queue<int>();
@@ -148,7 +148,7 @@ public class Tests
             {
                 continue;
             }
-            _dictList.Unset(kv.Key);
+            _dictList.UnsetAt(kv.Key);
         }
         // then trim it
         _dictList.CompactAndTrimExcess();
