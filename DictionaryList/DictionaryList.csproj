@@ -17,6 +17,6 @@
         <PackageTags>array;list</PackageTags>
         <RepositoryUrl>https://github.com/Vectorial1024/DictionaryList</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
-
 </Project>
