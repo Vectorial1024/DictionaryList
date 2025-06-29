@@ -14,7 +14,7 @@
         <FileVersion>0.1.0</FileVersion>
         <Title>DictionaryList</Title>
         <Description>When PHP arrays meet C#: an all-rounded reinterpretation of Lists. Please see the GitHub repository for more information.</Description>
-        <PackageTags>array;list;dictionary</PackageTags>
+        <PackageTags>array;list</PackageTags>
         <RepositoryUrl>https://github.com/Vectorial1024/DictionaryList</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
