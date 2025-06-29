@@ -149,6 +149,7 @@ dotnet run -c=Release --project=Benchmarking
 | Remove Many Items w/ LINQ (speed)   | 👍     | 👌             | 👎👎       |
 | Remove Many Items w/ LINQ (memory)  | 👍     | 👌             | 👎         |
 | Emit Key/Index During `foreach`     | ❌      | ✔️             | ✔️         |
+| Remove Items During `foreach`       | ❌      | ✔️             | ✔️         |
 
 You may see that `DictionaryList<T>` is an all-rounded, midway solution between a `List<T>` and a `Dictionary<TKey,TValue>`. 
 
