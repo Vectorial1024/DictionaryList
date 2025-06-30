@@ -1,4 +1,4 @@
-# Change Log of `DiscreteList`
+# Change Log of `DictionaryList`
 This package follows semantic versioning. When in doubt, refer to the latest docstrings.
 
 ## Dev (WIP)
