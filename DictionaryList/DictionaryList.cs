@@ -62,15 +62,16 @@ namespace Vectorial1024.Collections.Generic
         /// <summary>
         /// Gets the number of elements contained in this DictionaryList.
         /// <para/>
-        /// This only counts the number of elements accessible by an index.
+        /// Indexes that are unset are not counted.
         /// </summary>
         public int Count => _actualCount;
 
         /// <summary>
-        /// Gets
+        /// Gets the total number of elements the internal data structure can hold without resizing.
         /// <para/>
-        /// Note: re
+        /// Indexes that are unset are still counted towards the usage of the internal data structure.
         /// </summary>
+        /// <seealso cref="CompactAndTrimExcess"/>
         public int Capacity => _list.Capacity;
 
         public TValue this[int index]
