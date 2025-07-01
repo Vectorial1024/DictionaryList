@@ -63,7 +63,7 @@ Compared to a `List<T>`, there are some characteristics/restrictions:
 - No `Insert()`; use `Append()` instead
 - No `RemoveAt()`; use `UnsetAt()` instead, which leaves behind "memory gaps"
 - Memory gaps may be reused if you know their indexes; also see `ContainsIndex()`
-- Enumeration skips over unset rows
+- Enumeration yields `KeyValuePair<int,T>` and skips over unset rows
 - No `TrimExcess()`; use `CompactAndTrimExcess()` instead
 - `UnsetAt()` during `foreach` is allowed!
 
