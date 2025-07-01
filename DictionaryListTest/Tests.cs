@@ -42,7 +42,7 @@ public class Tests
                 Assert.That(_dictList, Has.Count.EqualTo(itemsTarget - i - 1));
                 Assert.That(_dictList.Count, Is.EqualTo(itemsTarget - i - 1));
                 Assert.That(_dictList.ContainsIndex(i), Is.False);
-                Assert.Throws<ArgumentOutOfRangeException>(() => _ = _dictList[i]);
+                Assert.Throws<KeyNotFoundException>(() => _ = _dictList[i]);
             });
             Assert.That(_dictList.ContainsIndex(i), Is.False);
         }

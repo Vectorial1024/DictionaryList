@@ -80,7 +80,7 @@ namespace Vectorial1024.Collections.Generic
                 var item = _list[index];
                 if (item == null)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                    throw new KeyNotFoundException($"The given index {index} was unset in the list.");
                 }
                 return item.Value.Value;
             }
