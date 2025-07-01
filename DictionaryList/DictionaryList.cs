@@ -214,7 +214,7 @@ namespace Vectorial1024.Collections.Generic
                 if (_version != _dictList._version)
                 {
                     // DictionaryList was modified during enumeration; not allowed!
-                    throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
+                    ThrowHelper.ThrowBadEnumerationException();
                 }
                 // end of list
                 _current = default;
@@ -226,7 +226,7 @@ namespace Vectorial1024.Collections.Generic
                 if (_version != _dictList._version)
                 {
                     // DictionaryList was modified during enumeration; not allowed!
-                    throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
+                    ThrowHelper.ThrowBadEnumerationException();
                 }
                 _index = 0;
                 _current = default;
