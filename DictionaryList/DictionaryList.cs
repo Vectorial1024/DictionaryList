@@ -149,6 +149,7 @@ namespace Vectorial1024.Collections.Generic
         public void Clear()
         {
             _list.Clear();
+            _actualCount = 0;
         }
 
         /// <summary>

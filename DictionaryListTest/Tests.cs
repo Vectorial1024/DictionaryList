@@ -125,6 +125,8 @@ public class Tests
         {
             Assert.Fail("An empty DictionaryList should not be iterable.");
         }
+
+        Assert.That(_dictList.Count, Is.EqualTo(0));
         Assert.Pass();
     }
 
