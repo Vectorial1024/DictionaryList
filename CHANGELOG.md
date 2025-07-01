@@ -14,3 +14,6 @@ Further optimization and refinement can still be made.
 ### Sub-release 0.1.1:
 - Fixed calling `DictionaryList<T>.Clear()` does nto result in correct `DictionaryList<T>.Count`
 - Reading the `Dictionary<T>` with an unset index now throws `KeyNotFoundException` instead of `ArgumentOutOfRangeException`
+
+### Sub-release 0.1.2:
+- Fixed incomplete docstring of `DictionaryList<T>.Capacity`
