@@ -183,7 +183,7 @@ namespace Vectorial1024.Collections.Generic
             private readonly DictionaryList<TValue> _dictList;
             private int _index;
             private KeyValuePair<int, TValue> _current;
-            private readonly int _logicalCount;
+            private readonly int _size;
             private readonly int _version;
 
             internal DictionaryListEnumerator(DictionaryList<TValue> dictList)
@@ -191,7 +191,7 @@ namespace Vectorial1024.Collections.Generic
                 _index = 0;
                 _dictList = dictList;
                 _current = default;
-                _logicalCount = _dictList._list.Count;
+                _size = _dictList._list.Count;
                 _version = dictList._version;
             }
 
@@ -199,7 +199,7 @@ namespace Vectorial1024.Collections.Generic
             {
                 var iterIndex = _index;
                 var theDictList = _dictList;
-                while (_version == theDictList._version && (uint)iterIndex < (uint)_logicalCount)
+                while (_version == theDictList._version && (uint)iterIndex < (uint)_size)
                 {
                     if (!theDictList.ContainsIndex(iterIndex))
                     {
