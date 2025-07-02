@@ -13,11 +13,15 @@ public class DictListBenchmarks
 
     private Dictionary<int, int> _masterDict = new();
 
+    private SortedDictionary<int, int> _masterSortedDict = new();
+
     private DictionaryList<int> _masterDictList = new();
 
     private List<int> _iterList = [];
 
     private Dictionary<int, int> _iterDict = new();
+
+    private SortedDictionary<int, int> _iterSortedDict = new();
 
     private DictionaryList<int> _iterDictList = new();
 
@@ -30,6 +34,7 @@ public class DictListBenchmarks
         _masterList.TrimExcess();
         _masterDict.Clear();
         _masterDict.TrimExcess();
+        _masterSortedDict.Clear();
         _masterDictList.Clear();
         _masterDictList.CompactAndTrimExcess();
 
@@ -37,6 +42,7 @@ public class DictListBenchmarks
         {
             _masterList.Add(i);
             _masterDict.Add(i, i);
+            _masterSortedDict.Add(i, i);
             _masterDictList.Add(i);
         }
     }
@@ -46,8 +52,11 @@ public class DictListBenchmarks
     {
         _iterList = new List<int>(_masterList);
         _iterDict = new Dictionary<int, int>(_masterDict);
+        _iterSortedDict = new SortedDictionary<int, int>(_masterSortedDict);
         _iterDictList = new DictionaryList<int>(_masterDictList);
     }
+
+    #region AppendMany
 
     [Benchmark]
     public void AppendManyToList()
@@ -70,6 +79,16 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
+    public void AppendManyToSortedDict()
+    {
+        var sortedDict = new SortedDictionary<int, int>();
+        for (var i = 0; i < N; i++)
+        {
+            sortedDict[i] = i;
+        }
+    }
+
+    [Benchmark]
     public void AppendManyToDictList()
     {
         var dictList = new DictionaryList<int>();
@@ -78,6 +97,10 @@ public class DictListBenchmarks
             dictList.Add(i);
         }
     }
+
+    #endregion
+
+    #region Iterate
 
     [Benchmark]
     public void IterateList()
@@ -100,6 +123,16 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
+    public void IterateSortedDict()
+    {
+        var sum = 0L;
+        foreach (var kv in _masterSortedDict)
+        {
+            sum += kv.Value;
+        }
+    }
+
+    [Benchmark]
     public void IterateDictList()
     {
         var sum = 0L;
@@ -108,6 +141,10 @@ public class DictListBenchmarks
             sum += kv.Value;
         }
     }
+
+    #endregion
+
+    #region ReadMany
 
     [Benchmark]
     public void ReadManyFromList()
@@ -130,6 +167,16 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
+    public void ReadManyFromSortedDict()
+    {
+        // access all indexes of multiples of 5
+        for (var i = 0; i < N; i += 5)
+        {
+            _ = _iterSortedDict[i];
+        }
+    }
+
+    [Benchmark]
     public void ReadManyFromDictList()
     {
         // access all indexes of multiples of 5
@@ -138,6 +185,10 @@ public class DictListBenchmarks
             _ = _iterDictList[i];
         }
     }
+
+    #endregion
+
+    #region RemoveMany
 
     [Benchmark]
     public void RemoveManyFromListInPlace()
@@ -182,6 +233,33 @@ public class DictListBenchmarks
     }
 
     [Benchmark]
+    public void RemoveManyFromSortedDictInPlace()
+    {
+        // remove everything not divisible by 6
+        foreach (var kv in _iterSortedDict)
+        {
+            if (kv.Key % 6 == 0)
+            {
+                continue;
+            }
+            _iterDict.Remove(kv.Key);
+        }
+    }
+
+    [Benchmark]
+    public void RemoveManyFromSortedDictWithLinq()
+    {
+        // remove everything not divisible by 6
+        var temp = _iterDict.Where(kv => kv.Key % 6 == 0).ToDictionary();
+        var target = new SortedDictionary<int, int>();
+        foreach (var kv in temp)
+        {
+            target.Add(kv.Key, kv.Value);
+        }
+        _iterSortedDict = target;
+    }
+
+    [Benchmark]
     public void RemoveManyFromDictListInPlace()
     {
         // remove everything not divisible by 6
@@ -207,4 +285,6 @@ public class DictListBenchmarks
         }
         _iterDictList = target;
     }
+
+    #endregion
 }
