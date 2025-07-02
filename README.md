@@ -146,25 +146,28 @@ dotnet run -c=Release --project=Benchmarking
 ```
 
 ### Quick performance comparison between relevant collection types
-| Task                                | List   | DictionaryList | Dictionary |
-|-------------------------------------|--------|----------------|------------|
-| Append Many Items (speed)           | 👍     | 👌             | 👎👎       |
-| Append Many Items (memory)          | 👍     | 👌             | 👎👎       |
-| Full Iteration (speed)              | 👍     | 👎             | 👌         |
-| Full Iteration (memory)             | 👍 (0) | 👌             | 👍 (0)     |
-| Read Many Items (speed)             | 👍     | 👌             | 👎         |
-| Read Many Items (memory)            | 👍 (0) | 👍 (0)         | 👍 (0)     |
-| Remove Many Items In-place (speed)  | 👎👎👎 | 👌             | 👍         |
-| Remove Many Items In-place (memory) | 👍 (0) | 👌             | 👍 (0)     |
-| Remove Many Items w/ LINQ (speed)   | 👍     | 👌             | 👎👎       |
-| Remove Many Items w/ LINQ (memory)  | 👍     | 👌             | 👎         |
-| Emit Key/Index During `foreach`     | ❌      | ✔️             | ✔️         |
-| Remove Items During `foreach`       | ❌      | ✔️             | ✔️         |
+| Task                                | List   | DictionaryList | Dictionary | SortedDictionary |
+|-------------------------------------|--------|----------------|------------|------------------|
+| Append Many Items (speed)           | 👍     | 👌             | 👎👎       | 👎👎👎           |
+| Append Many Items (memory)          | 👍     | 👌             | 👎👎       | 👎               |
+| Full Iteration (speed)              | 👍     | 👎             | 👌         | 👎👎             |
+| Full Iteration (memory)             | 👍 (0) | 👌             | 👍 (0)     | 👌               |
+| Read Many Items (speed)             | 👍     | 👌             | 👎         | 👎👎             |
+| Read Many Items (memory)            | 👍 (0) | 👍 (0)         | 👍 (0)     | 👍 (0)           |
+| Remove Many Items In-place (speed)  | 👎👎👎 | 👌             | 👍         | 👌               |
+| Remove Many Items In-place (memory) | 👍 (0) | 👌             | 👍 (0)     | 👌               |
+| Remove Many Items w/ LINQ (speed)   | 👍     | 👌             | 👎👎       | 👎👎             |
+| Remove Many Items w/ LINQ (memory)  | 👍     | 👌             | 👎         | 👎👎             |
+| Emit Key/Index During `foreach`     | ❌      | ✔️             | ✔️         | ✔️               |
+| Update Items During `foreach`       | 🤷     | ✔️             | ✔️         | ❌ key exists     |
+| Remove Items During `foreach`       | ❌      | ✔️             | ✔️         | ❌                |
 
-You may see that `DictionaryList<T>` is an all-rounded, midway solution between a `List<T>` and a `Dictionary<TKey,TValue>`. 
+You may see that `DictionaryList<T>` is an all-rounded, midway solution between a `List<T>` and a `Dictionary<TKey,TValue>`.
+
+As part of the benchmark, you may also see that `SortedDictionary<TKey,TValue>` is generally a bad type to use compared to other similar types.
 
 ### Sample benchmarking results
-The benchmark is run with version `0.1.0` of this library.
+The benchmark is run with version `0.1.2` of this library.
 
 For details, please see `BENCHMARK.md`.
 
