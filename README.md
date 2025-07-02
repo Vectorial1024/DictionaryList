@@ -116,8 +116,7 @@ dictList.UnsetAt(1);
 // ...to demonstrate traversal
 foreach (var kv in dictList) 
 {
-    _ = kv.Key;
-    _ = kv.Value;
+    _ = (kv.Key, kv.Value);
     // yields in order: (0, 1), (2, 3), (3, 12), (4, 5); 4 items!
 }
 
