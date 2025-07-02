@@ -2,6 +2,8 @@
 This package follows semantic versioning. When in doubt, refer to the latest docstrings.
 
 ## Dev (WIP)
+
+## Version `0.1.0`, `0.1.1`, and `0.1.2` (2025-07-02)
 Initial release.
 
 (Important note: `0.1.0` is the "let's see how NuGet works" release, while `0.1.1`, `0.1.2`, etc. polishes the package more by fixing bugs, etc.)  
