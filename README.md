@@ -129,8 +129,11 @@ dictList.Clear();
 _ = dictList.Count; // 0
 ```
 
-### Thread Safety
+### Thread Safety?
 `DictionaryList<T>` is NOT thread safe!
+
+## Native AOT?
+`DictionaryList<T>` is compatible with Native AOT.
 
 ## Benchmarking
 This package is benchmarked with the BenchmarkDotNet package.
