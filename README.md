@@ -164,9 +164,9 @@ dotnet run -c=Release --project=Benchmarking
 You may see that `DictionaryList<T>` is an all-rounded, midway solution between a `List<T>` and a `Dictionary<TKey,TValue>`. 
 
 ### Sample benchmarking results
-The benchmark is run with the initial version of this library.
+The benchmark is run with version `0.1.0` of this library.
 
-See `BENCHMARK.md`.
+For details, please see `BENCHMARK.md`.
 
 ## Testing
 This package uses NUnit for testing.
