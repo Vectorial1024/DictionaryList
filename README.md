@@ -146,21 +146,21 @@ dotnet run -c=Release --project=Benchmarking
 ```
 
 ### Quick performance comparison between relevant collection types
-| Task                                | List   | DictionaryList | Dictionary | SortedDictionary |
-|-------------------------------------|--------|----------------|------------|------------------|
-| Append Many Items (speed)           | 👍     | 👌             | 👎👎       | 👎👎👎           |
-| Append Many Items (memory)          | 👍     | 👌             | 👎👎       | 👎               |
-| Full Iteration (speed)              | 👍     | 👎             | 👌         | 👎👎             |
-| Full Iteration (memory)             | 👍 (0) | 👌             | 👍 (0)     | 👌               |
-| Read Many Items (speed)             | 👍     | 👌             | 👎         | 👎👎             |
-| Read Many Items (memory)            | 👍 (0) | 👍 (0)         | 👍 (0)     | 👍 (0)           |
-| Remove Many Items In-place (speed)  | 👎👎👎 | 👌             | 👍         | 👌               |
-| Remove Many Items In-place (memory) | 👍 (0) | 👌             | 👍 (0)     | 👌               |
-| Remove Many Items w/ LINQ (speed)   | 👍     | 👌             | 👎👎       | 👎👎             |
-| Remove Many Items w/ LINQ (memory)  | 👍     | 👌             | 👎         | 👎👎             |
-| Emit Key/Index During `foreach`     | ❌      | ✔️             | ✔️         | ✔️               |
-| Update Items During `foreach`       | 🤷     | ✔️             | ✔️         | ❌ key exists     |
-| Remove Items During `foreach`       | ❌      | ✔️             | ✔️         | ❌                |
+| Task                                | List     | DictionaryList | Dictionary | SortedDictionary |
+|-------------------------------------|----------|----------------|------------|------------------|
+| Append Many Items (speed)           | 👍       | 👌             | 👎👎       | 👎👎👎           |
+| Append Many Items (memory)          | 👍       | 👌             | 👎👎       | 👎               |
+| Full Iteration (speed)              | 👍       | 👎             | 👌         | 👎👎             |
+| Full Iteration (memory)             | 👍 (0)   | 👌             | 👍 (0)     | 👌               |
+| Read Many Items (speed)             | 👍       | 👌             | 👎         | 👎👎             |
+| Read Many Items (memory)            | 👍 (0)   | 👍 (0)         | 👍 (0)     | 👍 (0)           |
+| Remove Many Items In-place (speed)  | 👎👎👎   | 👌             | 👍         | 👌               |
+| Remove Many Items In-place (memory) | 👍 (0)   | 👌             | 👍 (0)     | 👌               |
+| Remove Many Items w/ LINQ (speed)   | 👍       | 👌             | 👎👎       | 👎👎             |
+| Remove Many Items w/ LINQ (memory)  | 👍       | 👌             | 👎         | 👎👎             |
+| Emit Key/Index During `foreach`     | 🤷 ([1]) | ✔️             | ✔️         | ✔️               |
+| Replace Items During `foreach`      | 🤷 ([1]) | ✔️             | ✔️         | ❌ if key exists  |
+| Remove Items During `foreach`       | ❌        | ✔️             | ✔️         | ❌                |
 
 You may see that `DictionaryList<T>` is an all-rounded, midway solution between a `List<T>` and a `Dictionary<TKey,TValue>`.
 
@@ -179,6 +179,9 @@ Run the tests with:
 ```shell
 dotnet test
 ```
+
+## Appendix
+[1] Technically, this can be done with Enumerable LINQ's Index method, but using LINQ with `foreach` is perhaps an antipattern. 
 
 [nuget-url]: https://www.nuget.org/packages/Vectorial1024.DictionaryList/
 [nuget-stats-url]: https://www.nuget.org/stats/packages/Vectorial1024.DictionaryList?groupby=Version
