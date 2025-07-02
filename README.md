@@ -166,6 +166,11 @@ You may see that `DictionaryList<T>` is an all-rounded, midway solution between 
 
 As part of the benchmark, you may also see that `SortedDictionary<TKey,TValue>` is generally a bad type to use compared to other similar types.
 
+The following collection types are excluded from the benchmarking:
+- `OrderedDictionary`: ambiguity between intended `<int,T>` usage and `this[int]` syntax
+- `LinkedList<T>`: unfair/impossible comparison due to lack of index access
+- `SortedList<int,T>`: too similar to `SortedDictionary<int,T>`, probably has similar performance
+
 ### Sample benchmarking results
 The benchmark is run with version `0.1.2` of this library.
 
