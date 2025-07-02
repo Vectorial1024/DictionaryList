@@ -132,7 +132,7 @@ _ = dictList.Count; // 0
 ### Thread Safety?
 `DictionaryList<T>` is NOT thread safe!
 
-## Native AOT?
+### Native AOT?
 `DictionaryList<T>` is compatible with Native AOT.
 
 ## Benchmarking
