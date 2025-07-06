@@ -21,6 +21,7 @@ We quickly notice problems when removing many items in-place from `List<T>`:
 We also notice the problems of the alternatives:
 - `Array<T>` does not automatically resize: tedious memory management
 - It is very slow to insert many data into `Dictionary<int,T>`
+  - By the way, `HashSet<T>` is essentially equivalent to `Dictionary<T,void>`
 - LINQ expressions are usually the fastest, but will require extra memory allocation when building the solution `List<T>`
 - Or, perhaps the problem asks for a `foreach` solution with side effects, such that LINQ is not suitable
 
