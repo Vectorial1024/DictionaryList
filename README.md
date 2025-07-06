@@ -163,8 +163,8 @@ But still, here is a table outlining the performances when `N = 100000`:
 | Remove Many Items w/ LINQ (speed)   | 104 ms ⭐    | 793 ms 👌      | 885 ms     | 1693 ms          |
 | Remove Many Items w/ LINQ (memory)  | 198072 B ⭐  | 529280 B 👌    | 673168 B   | 1473296 B        |
 | Add Items During `foreach`          | ❌           | ❌              | ❌ new key  | ❌                |
-| Emit Key/Index During `foreach`     | 🤷 ([1])    | ✔️             | ✔️         | ✔️               |
-| Replace Items During `foreach`      | 🤷 ([1])    | ✔️             | ✔️         | ❌ if key exists  |
+| Emit Key/Index During `foreach`     | 🤷 [1]      | ✔️             | ✔️         | ✔️               |
+| Replace Items During `foreach`      | 🤷 [1]      | ✔️             | ✔️         | ❌ if key exists  |
 | Remove Items During `foreach`       | ❌           | ✔️             | ✔️         | ❌                |
 
 You may see that `DictionaryList<T>` is an all-rounded, midway solution between a `List<T>` and a `Dictionary<TKey,TValue>`.
