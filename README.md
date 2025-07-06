@@ -146,36 +146,36 @@ dotnet run -c=Release --project=Benchmarking
 ```
 
 ### Quick performance comparison between relevant collection types
-| Task                                | List     | DictionaryList | Dictionary    | SortedDictionary |
-|-------------------------------------|----------|----------------|---------------|------------------|
-| Append Many Items (speed)           | 👍       | 👌             | 👎👎          | 👎👎👎           |
-| Append Many Items (memory)          | 👍       | 👌             | 👎👎          | 👎               |
-| Full Iteration (speed)              | 👍       | 👎             | 👌            | 👎👎             |
-| Full Iteration (memory)             | 👍 (0)   | 👌             | 👍 (0)        | 👌               |
-| Read Many Items (speed)             | 👍       | 👌             | 👎            | 👎👎             |
-| Read Many Items (memory)            | 👍 (0)   | 👍 (0)         | 👍 (0)        | 👍 (0)           |
-| Remove Many Items In-place (speed)  | 👎👎👎   | 👌             | 👍            | 👌               |
-| Remove Many Items In-place (memory) | 👍 (0)   | 👌             | 👍 (0)        | 👌               |
-| Remove Many Items w/ LINQ (speed)   | 👍       | 👌             | 👎👎          | 👎👎             |
-| Remove Many Items w/ LINQ (memory)  | 👍       | 👌             | 👎            | 👎👎             |
-| Add Items During `foreach`          | ❌        | ❌              | ❌ if new hash | ❌                |
-| Emit Key/Index During `foreach`     | 🤷 ([1]) | ✔️             | ✔️            | ✔️               |
-| Replace Items During `foreach`      | 🤷 ([1]) | ✔️             | ✔️            | ❌ if key exists  |
-| Remove Items During `foreach`       | ❌        | ✔️             | ✔️            | ❌                |
+A benchmark was run with version `0.1.2` of this library. Its detailed results can be found in `BENCHMARK.md`.
+
+But still, here is a table outlining the performances when `N = 100000`:
+
+| Task                                | List        | DictionaryList | Dictionary | SortedDictionary |
+|-------------------------------------|-------------|----------------|------------|------------------|
+| Append Many Items (speed)           | 155 ms ⭐    | 317 ms 👌      | 1073 ms    | 10507 ms         |
+| Append Many Items (memory)          | 1048976 B ⭐ | 2097536 B 👌   | 6037640 B  | 4800112 B        |
+| Full Iteration (speed)              | 50 ms ⭐     | 176 ms 👌      | 162 ms     | 587 ms           |
+| Full Iteration (memory)             | 0 B         | 48 B           | 0 B        | 312 B            |
+| Read Many Items (speed)             | 17 ms ⭐     | 65 ms 👌       | 147 ms     | 1322 ms          |
+| Read Many Items (memory)            | 0 B         | 0 B            | 0 B        | 0 B              |
+| Remove Many Items In-place (speed)  | 557307 ms   | 789 ms 👌      | 316 ms ⭐   | 810 ms           |
+| Remove Many Items In-place (memory) | 0 B         | 48 B           | 0 B        | 312 B            |
+| Remove Many Items w/ LINQ (speed)   | 104 ms ⭐    | 793 ms 👌      | 885 ms     | 1693 ms          |
+| Remove Many Items w/ LINQ (memory)  | 198072 B ⭐  | 529280 B 👌    | 673168 B   | 1473296 B        |
+| Add Items During `foreach`          | ❌           | ❌              | ❌ new key  | ❌                |
+| Emit Key/Index During `foreach`     | 🤷 ([1])    | ✔️             | ✔️         | ✔️               |
+| Replace Items During `foreach`      | 🤷 ([1])    | ✔️             | ✔️         | ❌ if key exists  |
+| Remove Items During `foreach`       | ❌           | ✔️             | ✔️         | ❌                |
 
 You may see that `DictionaryList<T>` is an all-rounded, midway solution between a `List<T>` and a `Dictionary<TKey,TValue>`.
 
 As part of the benchmark, you may also see that `SortedDictionary<TKey,TValue>` is generally a bad type to use compared to other similar types.
 
 The following collection types are excluded from the benchmarking:
-- `OrderedDictionary`: ambiguity between intended `<int,T>` usage and `this[int]` syntax
+- `HashSet<T>`: too similar to `Dictionary<T, void>`, probably has similar performance
+- `OrderedDictionary`: ambiguity between intended `<int, T>` usage and `this[int]` syntax
 - `LinkedList<T>`: unfair/impossible comparison due to lack of index access
-- `SortedList<int,T>`: too similar to `SortedDictionary<int,T>`, probably has similar performance
-
-### Sample benchmarking results
-The benchmark is run with version `0.1.2` of this library.
-
-For details, please see `BENCHMARK.md`.
+- `SortedList<int,T>`: too similar to `SortedDictionary<int, T>`, probably has similar performance
 
 ## Testing
 This package uses NUnit for testing.
@@ -187,7 +187,7 @@ dotnet test
 ```
 
 ## Appendix
-[1] Technically, this can be done with Enumerable LINQ's Index method, but using LINQ with `foreach` is perhaps an antipattern. 
+[1] Technically, this can be done with Enumerable LINQ's `Index` method, but using LINQ with `foreach` is perhaps an antipattern. 
 
 [nuget-url]: https://www.nuget.org/packages/Vectorial1024.DictionaryList/
 [nuget-stats-url]: https://www.nuget.org/stats/packages/Vectorial1024.DictionaryList?groupby=Version
