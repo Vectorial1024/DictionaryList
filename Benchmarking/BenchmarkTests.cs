@@ -58,6 +58,13 @@ public class DictListBenchmarks
 
     #region AppendMany
 
+    /*
+     * append many items into the data structures.
+     * the structures are not initialized with the correct sizes
+     * so to simulate situation where the final size is not known beforehand,
+     * e.g. reading from a database query enumerable
+     */
+
     [Benchmark]
     public void AppendManyToList()
     {
