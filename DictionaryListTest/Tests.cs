@@ -205,5 +205,15 @@ public class Tests
                 _dictList.Add(9);
             }
         });
+
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            _dictList.UnsetAt(1);
+            foreach (var _ in _dictList)
+            {
+                // it should somehow throw the exception during iteration
+                _dictList[1] = 4;
+            }
+        });
     }
 }

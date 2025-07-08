@@ -80,6 +80,11 @@ namespace Vectorial1024.Collections.Generic
             }
             set
             {
+                if (!_issetLookup[index])
+                {
+                    // adding items during iteration is not allowed!
+                    _version++;
+                }
                 _list[index] = value;
                 _issetLookup[index] = true;
             }

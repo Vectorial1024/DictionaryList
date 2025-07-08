@@ -162,7 +162,7 @@ But still, here is a table outlining the performances when `N = 100000`:
 | Remove Many Items In-place (memory) | 0 B         | 48 B           | 0 B        | 312 B            |
 | Remove Many Items w/ LINQ (speed)   | 104 ms ⭐    | 793 ms 👌      | 885 ms     | 1693 ms          |
 | Remove Many Items w/ LINQ (memory)  | 198072 B ⭐  | 529280 B 👌    | 673168 B   | 1473296 B        |
-| Add Items During `foreach`          | ❌           | ❌              | ❌ new key  | ❌                |
+| Add Items During `foreach`          | ❌           | ❌ new key      | ❌ new key  | ❌                |
 | Emit Key/Index During `foreach`     | 🤷 [1]      | ✔️             | ✔️         | ✔️               |
 | Replace Items During `foreach`      | 🤷 [1]      | ✔️             | ✔️         | ❌ if key exists  |
 | Remove Items During `foreach`       | ❌           | ✔️             | ✔️         | ❌                |
