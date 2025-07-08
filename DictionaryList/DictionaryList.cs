@@ -12,21 +12,7 @@ namespace Vectorial1024.Collections.Generic
     /// </summary>
     public class DictionaryList<TValue> : IEnumerable<KeyValuePair<int,TValue>>
     {
-        /// <summary>
-        /// The data-box for storing DictionaryList elements. This is to distinguish between a genuine null and a "no data" entry.
-        /// </summary>
-        /// <typeparam name="TData"></typeparam>
-        internal struct DataBox<TData>
-        {
-            internal TData Value;
-
-            internal DataBox(TData value)
-            {
-                Value = value;
-            }
-        }
-
-        internal List<DataBox<TValue>?> _list = new List<DataBox<TValue>?>();
+        internal List<TValue> _list = new List<TValue>();
 
         internal bool[] _issetLookup;
 
@@ -51,7 +37,7 @@ namespace Vectorial1024.Collections.Generic
         /// <param name="collection">The collection to take copies from.</param>
         public DictionaryList(DictionaryList<TValue> collection)
         {
-            _list = new List<DataBox<TValue>?>(collection._list);
+            _list = new List<TValue>(collection._list);
             _actualCount = collection._actualCount;
             _issetLookup = (bool[]) collection._issetLookup.Clone();
         }
@@ -62,7 +48,7 @@ namespace Vectorial1024.Collections.Generic
         /// <param name="capacity"></param>
         public DictionaryList(int capacity)
         {
-            _list = new List<DataBox<TValue>?>(capacity);
+            _list = new List<TValue>(capacity);
             _issetLookup = new bool[capacity];
         }
 
@@ -85,16 +71,16 @@ namespace Vectorial1024.Collections.Generic
         {
             get
             {
-                var item = _list[index];
-                if (item == null)
+                var tempItem = _list[index];
+                if (!IndexIsSet(index))
                 {
                     throw new KeyNotFoundException($"The given index {index} was unset in the list.");
                 }
-                return item.Value.Value;
+                return tempItem;
             }
             set
             {
-                _list[index] = new DataBox<TValue>(value);
+                _list[index] = value;
                 _issetLookup[index] = true;
             }
         }
@@ -107,7 +93,7 @@ namespace Vectorial1024.Collections.Generic
         public void Add(TValue value)
         {
             var nextIndex = _list.Count;
-            _list.Add(new DataBox<TValue>(value));
+            _list.Add(value);
             _actualCount++;
             _version++;
 
@@ -128,13 +114,12 @@ namespace Vectorial1024.Collections.Generic
         /// <seealso cref="CompactAndTrimExcess"/>
         public void UnsetAt(int index)
         {
-            var box = _list[index];
-            if (box == null)
+            if (!IndexIsSet(index))
             {
                 return;
             }
 
-            _list[index] = null;
+            _list[index] = default!;
             _actualCount--;
             _issetLookup[index] = false;
         }
@@ -186,14 +171,14 @@ namespace Vectorial1024.Collections.Generic
         /// </summary>
         public void CompactAndTrimExcess()
         {
-            var newList = new List<DataBox<TValue>?>(_actualCount);
-            foreach (var item in _list)
+            var newList = new List<TValue>(_actualCount);
+            for (var index = 0; index < _list.Count; index++)
             {
-                if (item == null)
+                if (!IndexIsSet(index))
                 {
                     continue;
                 }
-                newList.Add(item);
+                newList.Add(_list[index]);
             }
             _list = newList;
             _actualCount = newList.Count;
