@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Vectorial1024.Collections.Generic
@@ -27,6 +28,8 @@ namespace Vectorial1024.Collections.Generic
 
         internal List<DataBox<TValue>?> _list = new List<DataBox<TValue>?>();
 
+        internal bool[] _issetLookup;
+
         internal int _actualCount;
 
         // the version of the DictionaryList, to ensure the enumerator can work correctly
@@ -37,6 +40,8 @@ namespace Vectorial1024.Collections.Generic
         /// </summary>
         public DictionaryList()
         {
+            var capacity = Capacity;
+            _issetLookup = new bool[capacity];
         }
 
         /// <summary>
@@ -48,6 +53,7 @@ namespace Vectorial1024.Collections.Generic
         {
             _list = new List<DataBox<TValue>?>(collection._list);
             _actualCount = collection._actualCount;
+            _issetLookup = (bool[]) collection._issetLookup.Clone();
         }
 
         /// <summary>
@@ -57,6 +63,7 @@ namespace Vectorial1024.Collections.Generic
         public DictionaryList(int capacity)
         {
             _list = new List<DataBox<TValue>?>(capacity);
+            _issetLookup = new bool[capacity];
         }
 
         /// <summary>
@@ -88,6 +95,7 @@ namespace Vectorial1024.Collections.Generic
             set
             {
                 _list[index] = new DataBox<TValue>(value);
+                _issetLookup[index] = true;
             }
         }
 
@@ -98,9 +106,17 @@ namespace Vectorial1024.Collections.Generic
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(TValue value)
         {
+            var nextIndex = _list.Count;
             _list.Add(new DataBox<TValue>(value));
             _actualCount++;
             _version++;
+
+            // react to resizing if happened
+            if (_issetLookup.Length != _list.Capacity)
+            {
+                Array.Resize(ref _issetLookup, _list.Capacity);
+            }
+            _issetLookup[nextIndex] = true;
         }
 
         /// <summary>
@@ -120,6 +136,7 @@ namespace Vectorial1024.Collections.Generic
 
             _list[index] = null;
             _actualCount--;
+            _issetLookup[index] = false;
         }
 
         /// <summary>
@@ -139,7 +156,15 @@ namespace Vectorial1024.Collections.Generic
                 return false;
             }
             // we might have it
-            return _list[index].HasValue;
+            return IndexIsSet(index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool IndexIsSet(int index)
+        {
+            // does not check for index range, for internal use where we are very sure it does not cause range overflow
+            // we force-inline it to waive this method call
+            return _issetLookup[index];
         }
 
         #region CompactAndTrim
@@ -151,6 +176,7 @@ namespace Vectorial1024.Collections.Generic
         {
             _list.Clear();
             _actualCount = 0;
+            _issetLookup = new bool[Capacity];
         }
 
         /// <summary>
@@ -172,6 +198,7 @@ namespace Vectorial1024.Collections.Generic
             _list = newList;
             _actualCount = newList.Count;
             _version++;
+            _issetLookup = Enumerable.Repeat(true, _actualCount).ToArray();
         }
 
         #endregion
@@ -185,6 +212,7 @@ namespace Vectorial1024.Collections.Generic
             private KeyValuePair<int, TValue> _current;
             private readonly int _size;
             private readonly int _version;
+            private readonly bool[] _issetLookup;
 
             internal DictionaryListEnumerator(DictionaryList<TValue> dictList)
             {
@@ -193,6 +221,7 @@ namespace Vectorial1024.Collections.Generic
                 _current = default;
                 _size = _dictList._list.Count;
                 _version = dictList._version;
+                _issetLookup = _dictList._issetLookup;
             }
 
             public bool MoveNext()
@@ -201,7 +230,7 @@ namespace Vectorial1024.Collections.Generic
                 var theDictList = _dictList;
                 while (_version == theDictList._version && (uint)iterIndex < (uint)_size)
                 {
-                    if (!theDictList.ContainsIndex(iterIndex))
+                    if (!theDictList.IndexIsSet(iterIndex))
                     {
                         // not set; find the next one!
                         iterIndex++;
