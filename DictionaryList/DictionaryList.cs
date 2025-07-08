@@ -80,6 +80,11 @@ namespace Vectorial1024.Collections.Generic
             }
             set
             {
+                if ((uint)index >= (uint)_list.Count)
+                {
+                    // out of range!
+                    ThrowHelper.ThrowArgumentOutOfRangeException(index);
+                }
                 if (!_issetLookup[index])
                 {
                     // adding items during iteration is not allowed!

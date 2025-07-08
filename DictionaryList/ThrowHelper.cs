@@ -10,5 +10,11 @@ namespace Vectorial1024.Collections.Generic
         {
             throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ThrowArgumentOutOfRangeException(int index)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index));
+        }
     }
 }
