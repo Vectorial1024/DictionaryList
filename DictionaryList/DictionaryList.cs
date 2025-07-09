@@ -12,22 +12,45 @@ namespace Vectorial1024.Collections.Generic
     /// </summary>
     public class DictionaryList<TValue> : IEnumerable<KeyValuePair<int,TValue>>
     {
-        internal List<TValue> _list = new List<TValue>();
+        // the version of the DictionaryList, to ensure the enumerator can work correctly
+        private int _version;
 
-        internal bool[] _issetLookup;
+        #region Backing Storage
+
+        private static readonly TValue[] EmptyArray = Array.Empty<TValue>();
+
+        private static readonly bool[] EmptyLookupArray = Array.Empty<bool>();
+
+        private const int DefaultCapacity = 4;
+
+        /// <summary>
+        /// Actual usable capacity of the backing storage. Indexes smaller than this value are usable.
+        /// <para/>
+        /// Value increased by Add(); value decreased by CompactAndTrimExcess().
+        /// </summary>
+        internal int _size;
 
         internal int _actualCount;
 
-        // the version of the DictionaryList, to ensure the enumerator can work correctly
-        private int _version;
+        /// <summary>
+        /// The backing storage of this DictionaryList.
+        /// </summary>
+        internal TValue[] _items;
+
+        /// <summary>
+        /// The index existence lookup array of this DictionaryList.
+        /// </summary>
+        internal bool[] _issetLookup;
+
+        #endregion
 
         /// <summary>
         /// Initializes a new instance of the `DictionaryList&lt;TValue&gt;` class that is empty and has the default capacity.
         /// </summary>
         public DictionaryList()
         {
-            var capacity = Capacity;
-            _issetLookup = new bool[capacity];
+            _items = EmptyArray;
+            _issetLookup = EmptyLookupArray;
         }
 
         /// <summary>
@@ -37,9 +60,10 @@ namespace Vectorial1024.Collections.Generic
         /// <param name="collection">The collection to take copies from.</param>
         public DictionaryList(DictionaryList<TValue> collection)
         {
-            _list = new List<TValue>(collection._list);
+            _items = (TValue[]) collection._items.Clone();
             _actualCount = collection._actualCount;
             _issetLookup = (bool[]) collection._issetLookup.Clone();
+            _size = collection._size;
         }
 
         /// <summary>
@@ -48,7 +72,7 @@ namespace Vectorial1024.Collections.Generic
         /// <param name="capacity"></param>
         public DictionaryList(int capacity)
         {
-            _list = new List<TValue>(capacity);
+            _items = new TValue[capacity];
             _issetLookup = new bool[capacity];
         }
 
@@ -65,32 +89,37 @@ namespace Vectorial1024.Collections.Generic
         /// Indexes that are unset are still counted towards the usage of the internal data structure.
         /// </summary>
         /// <seealso cref="CompactAndTrimExcess"/>
-        public int Capacity => _list.Capacity;
+        public int Capacity => _size;
 
         public TValue this[int index]
         {
             get
             {
-                var tempItem = _list[index];
-                if (!IndexIsSet(index))
-                {
-                    throw new KeyNotFoundException($"The given index {index} was unset in the list.");
-                }
-                return tempItem;
-            }
-            set
-            {
-                if ((uint)index >= (uint)_list.Count)
+                if ((uint)index >= (uint)_size)
                 {
                     // out of range!
                     ThrowHelper.ThrowArgumentOutOfRangeException(index);
                 }
-                if (!_issetLookup[index])
+                // definitely in range
+                if (!IndexIsSet(index))
+                {
+                    throw new KeyNotFoundException($"The given index {index} was unset in the list.");
+                }
+                return _items[index];
+            }
+            set
+            {
+                if ((uint)index >= (uint)_size)
+                {
+                    // out of range!
+                    ThrowHelper.ThrowArgumentOutOfRangeException(index);
+                }
+                if (!IndexIsSet(index))
                 {
                     // adding items during iteration is not allowed!
                     _version++;
                 }
-                _list[index] = value;
+                _items[index] = value;
                 _issetLookup[index] = true;
             }
         }
@@ -102,17 +131,26 @@ namespace Vectorial1024.Collections.Generic
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(TValue value)
         {
-            var nextIndex = _list.Count;
-            _list.Add(value);
-            _actualCount++;
-            _version++;
-
-            // react to resizing if happened
-            if (_issetLookup.Length != _list.Capacity)
+            var nextIndex = _size;
+            if (nextIndex == _items.Length)
             {
-                Array.Resize(ref _issetLookup, _list.Capacity);
+                // we need a larger backing storage
+                GrowBackingStorage();
             }
+            _items[nextIndex] = value;
             _issetLookup[nextIndex] = true;
+            _actualCount++;
+            _size++;
+            _version++;
+        }
+
+        private void GrowBackingStorage()
+        {
+            // what should be our next array length?
+            var nextLength = _items.Length == 0 ? DefaultCapacity : _items.Length * 2;
+            // then, grow it
+            Array.Resize(ref _items, nextLength);
+            Array.Resize(ref _issetLookup, nextLength);
         }
 
         /// <summary>
@@ -124,12 +162,16 @@ namespace Vectorial1024.Collections.Generic
         /// <seealso cref="CompactAndTrimExcess"/>
         public void UnsetAt(int index)
         {
+            if ((uint)index >= (uint)_size)
+            {
+                ThrowHelper.ThrowArgumentOutOfRangeException(index);
+            }
             if (!IndexIsSet(index))
             {
                 return;
             }
 
-            _list[index] = default!;
+            _items[index] = default!;
             _actualCount--;
             _issetLookup[index] = false;
         }
@@ -141,12 +183,7 @@ namespace Vectorial1024.Collections.Generic
         /// <returns>Returns true if the index is in use by an element; false otherwise (e.g. unused memory left behind by RemoveAt())</returns>
         public bool ContainsIndex(int index)
         {
-            if (index < 0)
-            {
-                return false;
-            }
-
-            if (index > _list.Count)
+            if ((uint)index >= (uint)_size)
             {
                 return false;
             }
@@ -169,9 +206,23 @@ namespace Vectorial1024.Collections.Generic
         /// </summary>
         public void Clear()
         {
-            _list.Clear();
+            _version++;
+            var oldSize = _size;
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<TValue>())
+            {
+                // Clear the elements so that the gc can reclaim the references.
+                _size = 0;
+                if (oldSize > 0)
+                {
+                    Array.Clear(_items, 0, oldSize);
+                }
+            }
+            else
+            {
+                _size = 0;
+            }
             _actualCount = 0;
-            _issetLookup = new bool[Capacity];
+            Array.Clear(_issetLookup, 0, oldSize);
         }
 
         /// <summary>
@@ -181,19 +232,39 @@ namespace Vectorial1024.Collections.Generic
         /// </summary>
         public void CompactAndTrimExcess()
         {
-            var newList = new List<TValue>(_actualCount);
-            for (var index = 0; index < _list.Count; index++)
+            _version++;
+            if (_actualCount == 0)
+            {
+                // somehow reset this
+                _items = EmptyArray;
+                _issetLookup = EmptyLookupArray;
+                _size = 0;
+                return;
+            }
+
+            // prepare the new backing storage
+            var newItems = new TValue[_actualCount];
+            var newIndex = 0;
+            for (var index = 0; index < _size; index++)
             {
                 if (!IndexIsSet(index))
                 {
+                    // this is an empty slot; skip
                     continue;
                 }
-                newList.Add(_list[index]);
+                // this has items; move it over!
+                newItems[newIndex] = _items[index];
+                newIndex++;
+                if (newIndex == _actualCount)
+                {
+                    // we have moved everything; early finish!
+                    break;
+                }
             }
-            _list = newList;
-            _actualCount = newList.Count;
-            _version++;
+
+            _items = newItems;
             _issetLookup = Enumerable.Repeat(true, _actualCount).ToArray();
+            _size = _actualCount;
         }
 
         #endregion
@@ -205,25 +276,21 @@ namespace Vectorial1024.Collections.Generic
             private readonly DictionaryList<TValue> _dictList;
             private int _index;
             private KeyValuePair<int, TValue> _current;
-            private readonly int _size;
             private readonly int _version;
-            private readonly bool[] _issetLookup;
 
             internal DictionaryListEnumerator(DictionaryList<TValue> dictList)
             {
                 _index = 0;
                 _dictList = dictList;
                 _current = default;
-                _size = _dictList._list.Count;
                 _version = dictList._version;
-                _issetLookup = _dictList._issetLookup;
             }
 
             public bool MoveNext()
             {
                 var iterIndex = _index;
                 var theDictList = _dictList;
-                while (_version == theDictList._version && (uint)iterIndex < (uint)_size)
+                while (_version == theDictList._version && (uint)iterIndex < (uint)theDictList._size)
                 {
                     if (!theDictList.IndexIsSet(iterIndex))
                     {
