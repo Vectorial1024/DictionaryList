@@ -101,7 +101,7 @@ namespace Vectorial1024.Collections.Generic
                     ThrowHelper.ThrowArgumentOutOfRangeException(index);
                 }
                 // definitely in range
-                if (!IndexIsSet(index))
+                if (!_issetLookup[index])
                 {
                     throw new KeyNotFoundException($"The given index {index} was unset in the list.");
                 }
@@ -114,7 +114,7 @@ namespace Vectorial1024.Collections.Generic
                     // out of range!
                     ThrowHelper.ThrowArgumentOutOfRangeException(index);
                 }
-                if (!IndexIsSet(index))
+                if (!_issetLookup[index])
                 {
                     // adding items during iteration is not allowed!
                     _version++;
@@ -166,14 +166,15 @@ namespace Vectorial1024.Collections.Generic
             {
                 ThrowHelper.ThrowArgumentOutOfRangeException(index);
             }
-            if (!IndexIsSet(index))
+            ref var isset = ref _issetLookup[index];
+            if (!isset)
             {
                 return;
             }
 
             _items[index] = default!;
             _actualCount--;
-            _issetLookup[index] = false;
+            isset = false;
         }
 
         /// <summary>
@@ -188,14 +189,6 @@ namespace Vectorial1024.Collections.Generic
                 return false;
             }
             // we might have it
-            return IndexIsSet(index);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal bool IndexIsSet(int index)
-        {
-            // does not check for index range, for internal use where we are very sure it does not cause range overflow
-            // we force-inline it to waive this method call
             return _issetLookup[index];
         }
 
@@ -247,7 +240,7 @@ namespace Vectorial1024.Collections.Generic
             var newIndex = 0;
             for (var index = 0; index < _size; index++)
             {
-                if (!IndexIsSet(index))
+                if (!_issetLookup[index])
                 {
                     // this is an empty slot; skip
                     continue;
@@ -288,18 +281,17 @@ namespace Vectorial1024.Collections.Generic
 
             public bool MoveNext()
             {
-                var iterIndex = _index;
                 var theDictList = _dictList;
-                while (_version == theDictList._version && (uint)iterIndex < (uint)theDictList._size)
+                while (_version == theDictList._version && (uint)_index < (uint)theDictList._size)
                 {
-                    if (!theDictList.IndexIsSet(iterIndex))
+                    if (!theDictList._issetLookup[_index])
                     {
                         // not set; find the next one!
-                        iterIndex++;
+                        _index++;
                         continue;
                     }
-                    _current = new KeyValuePair<int, TValue>(iterIndex, theDictList[iterIndex]);
-                    _index = iterIndex + 1;
+                    _current = new KeyValuePair<int, TValue>(_index, theDictList[_index]);
+                    _index++;
                     return true;
                 }
 
