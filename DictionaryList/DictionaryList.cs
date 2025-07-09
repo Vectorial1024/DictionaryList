@@ -282,24 +282,28 @@ namespace Vectorial1024.Collections.Generic
             public bool MoveNext()
             {
                 var theDictList = _dictList;
-                while (_version == theDictList._version && (uint)_index < (uint)theDictList._size)
+                var theItems = theDictList._items;
+                var theLookup = theDictList._issetLookup;
+                var currentIndex = _index;
+                for (; currentIndex < theLookup.Length && currentIndex < theItems.Length; currentIndex++)
                 {
-                    if (!theDictList._issetLookup[_index])
+                    if (theDictList._version != _version)
+                    {
+                        // modifying the collection during enumeration is not allowed
+                        ThrowHelper.ThrowBadEnumerationException();
+                        _current = default;
+                        return false;
+                    }
+                    if (!theLookup[currentIndex])
                     {
                         // not set; find the next one!
-                        _index++;
                         continue;
                     }
-                    _current = new KeyValuePair<int, TValue>(_index, theDictList[_index]);
-                    _index++;
+                    _current = new KeyValuePair<int, TValue>(currentIndex, theItems[currentIndex]);
+                    _index = currentIndex + 1;
                     return true;
                 }
 
-                if (_version != _dictList._version)
-                {
-                    // DictionaryList was modified during enumeration; not allowed!
-                    ThrowHelper.ThrowBadEnumerationException();
-                }
                 // end of list
                 _current = default;
                 return false;
